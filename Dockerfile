@@ -6,5 +6,6 @@ RUN apt update
 WORKDIR /app
 
 COPY DockerNotif.py .
+COPY .env .
 
 CMD ["python", "DockerNotif.py"]
