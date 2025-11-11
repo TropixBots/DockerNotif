@@ -9,7 +9,7 @@ load_dotenv()
 
 client = docker.from_env()
 webhook_url = os.getenv("DISCORD_WEBHOOK_URL")
-role_id = os.getenv("DISCORD_ROLE_ID")
+role_id = (os.getenv("DISCORD_ROLE_ID") or "").strip()
 exclude_raw = os.getenv("EXCLUDE_CONTAINERS", "")
 excluded_containers = set(x.strip() for x in exclude_raw.split(",") if x.strip())
 exclude_actions_raw = os.getenv("EXCLUDE_ACTIONS", "")
@@ -26,10 +26,9 @@ def send_discord_message(event_type, container_name, container_id):
             {"name": "Timestamp", "value": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()), "inline": False}
         ]
     }
-    payload = {
-        "content": f"<@&{role_id}>",
-        "embeds": [embed]
-    }
+    payload = {"embeds": [embed]}
+    if role_id:
+        payload["content"] = f"<@&{role_id}>"
     requests.post(webhook_url, json=payload)
 
 for event in client.events(decode=True):
