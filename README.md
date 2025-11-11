@@ -31,6 +31,7 @@ A Python application that monitors Docker container events and sends notificatio
    ```
    DISCORD_WEBHOOK_URL=your_discord_webhook_url_here
    DISCORD_ROLE_ID=your_discord_role_id_here
+   EXCLUDE_CONTAINERS=comma_separated_names_or_ids
    ```
 
 2. Replace the values with your actual Discord webhook URL and role ID
@@ -98,6 +99,14 @@ Each notification includes:
 - Verify Discord webhook URL is correct
 - Check that the Discord role ID exists and is valid
 - Confirm the bot has permissions to mention the role
+
+## Excluding Containers
+
+Set `EXCLUDE_CONTAINERS` to a comma-separated list of container names or IDs. Names match exactly. IDs can be full or the first 12 characters. Example:
+
+```
+EXCLUDE_CONTAINERS=nginx,redis,3f4a1c2b9d12
+```
 
 ## Dependencies
 

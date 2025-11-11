@@ -10,6 +10,8 @@ load_dotenv()
 client = docker.from_env()
 webhook_url = os.getenv("DISCORD_WEBHOOK_URL")
 role_id = os.getenv("DISCORD_ROLE_ID")
+exclude_raw = os.getenv("EXCLUDE_CONTAINERS", "")
+excluded_containers = set(x.strip() for x in exclude_raw.split(",") if x.strip())
 
 def send_discord_message(event_type, container_name, container_id):
     embed = {
@@ -33,4 +35,6 @@ for event in client.events(decode=True):
         action = event["Action"]
         container_name = event["Actor"]["Attributes"]["name"]
         container_id = event["id"]
+        if container_name in excluded_containers or container_id in excluded_containers or container_id[:12] in excluded_containers:
+            continue
         send_discord_message(action, container_name, container_id)
